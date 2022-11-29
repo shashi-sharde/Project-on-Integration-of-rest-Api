@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <title>Document</title>
+    <style> body {
+        background-image: url(https://wallpaperaccess.com/full/7889622.jpg);
+    }
+form {
+    text-align: center;
+}
+button{
+           
+            font-size: 120%;
+            color: rgb(2, 104, 109);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <div class="card-body">
+    <form onsubmit="SaveToStorage(event)">
+        <h1 style="color:rgb(5, 34, 36)">Expense Tracker</h1>
+        <label style="color:rgb(5, 34, 36)">Choose Expenses</label><br>
+        <input id="num" type="number" Name="number" required /><br>
+        <label style="color:rgb(5, 34, 36)">Choose Description</label><br>
+        <input id="desc" type="text" Name="description" required /><br>
+        <label style="color:rgb(5, 34, 36)">Choose Category</label><br>
+        <select id="categ" Name="categories">
+            <option value="Travelling" >Travelling</option>
+            <option value="Food" >Food</option>
+            <option value="Shopping" >Shopping</option>
+            <option value="Clubbing" >Clubbing</option>
+            <option value="Gift" >Gift</option>
+        </select><br><br>
+        <button style="color:rgb(2, 104, 109)">Add Expenses</button>
+    </form>
+    </div>
+</div>
+    <ul id="NumberOfExpenses"></ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js"></script>
+    <script>
+        const apiData = "https://crudcrud.com/api/428f48bca91046868f1c6bf192c8bf50/Expenses"
+        function SaveToStorage(event){
+            event.preventDefault();
+            const Number = event.target.number.value;
+            const Description = event.target.description.value;
+            const Categories = event.target.categories.value;
+           
+            const obj = {
+                Number,
+                Description,
+                Categories
+            }
+            async function PostData(){
+                const response = await axios.post(apiData,obj)
+                return response
+            }
+            PostData().then((response)=>DisplayOnScreen(response.data))
+           
+        }
+        window.addEventListener("DOMContentLoaded", () => {
+            async function getData(){
+                const response = await axios.get(apiData)
+                return response
+            }
+            getData().then((response)=>{
+                for(i=0;i<response.data.length;i++){
+                    DisplayOnScreen(response.data[i])
+                }
+            })
+        })
+        function DisplayOnScreen(User){
+        const parentNode = document.getElementById("NumberOfExpenses")
+        const childNode = `<li id=${User._id}>${User.Categories}: Expense On-${User.Description}, Price- INR ${User.Number} 
+            <button onclick=deleteExpense('${User._id}')> Delete </button>
+            <button onclick=editUser('${User.Number}','${User.Description}','${User.Categories}','${User._id}') >Edit</button></li>`
+        parentNode.innerHTML = parentNode.innerHTML + childNode
+        
+        }
+        function editUser(number,description,categories,UserId){
+             document.getElementById('num').value = number
+             document.getElementById('desc').value = description
+             document.getElementById('categ').value = categories
+             deleteExpense(UserId)
+        }
+        function deleteExpense(UserId){
+            async function deleteData(){
+                const response = await axios.delete(`${apiData}/${UserId}`)
+                return response
+            }
+            deleteData().then((response)=>removeExpenseFromScreen(UserId))
+            
+            removeExpenseFromScreen(UserId);
+        }
+        function removeExpenseFromScreen(UserId){
+            const parentNode = document.getElementById('NumberOfExpenses');
+            const childNodeToBeDeleted = document.getElementById(UserId);
+
+            parentNode.removeChild(childNodeToBeDeleted);
+        }
+    </script>
+   
+</body>
+</html>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Document</title>
     <style>
         form {
@@ -11,26 +12,36 @@
             
         }
         body{
-            background-image: url("https://img.freepik.com/free-vector/laptop-with-program-code-isometric-icon-software-development-programming-applications-dark-neon_39422-971.jpg?size=626&ext=jpg");
+            background-image: url("https://img.freepik.com/free-vector/portrait-programmer-working-with-pc_23-2148222500.jpg?w=740&t=st=1669143065~exp=1669143665~hmac=7c49130b8b31ecc40f891c4b34eec0ebaf92129b914bc65ac5a1af355c7771e0");
             background-size:cover;
         }
         h1{
             text-align: center;
+        }
+        button{
+            background-color: grey;
+            font-size: 120%;
+            color: aqua;
         }
     </style>
 </head>
 
 <html>
     <body>
+        <div class="container my -5">
+        <div class="card-body">
+            <div class="text-center">
+            
+          
         <form onsubmit="SaveToLocalStorage(event)" autocomplete="on">
             
             <h1> EXPENSE TRACKER</h1>
-            <label>Choose Expenses</label>
-            <input type="number" id="num" name="number" required>
-            <label>Choose Description</label>
-            <input type="text" id="desc" name="description" required>
-            <label>Choose Category</label>
-            <select  id="categ" name="cetegory" required>
+            <b><label style="font-size:150%;">Choose Expenses</label>
+            <input style='width: 200px;height:20px;'type="number" id="num" name="number" required>
+            <label style="font-size:150%;">Choose Description</label>
+            <input style='width: 200px;height:20px;'type="text" id="desc" name="description" required>
+            <label style="font-size:150%;">Choose Category</label>
+            <select style="font-size:120%;" style='width: 200px;height:20px;' id="categ" name="cetegory" required>
                 <option value="Shopping">Shopping</option>
                 <option value="Travelling">Travelling</option>
                 <option value="Food">Food</option>
@@ -38,10 +49,13 @@
             </select><br>
             <br>
 
-            <button>Add expenses</button>
+            <button style='width: 150px;height: 27px;';>Add expenses</button>
 
-
+        
         </form>
+    </div>
+</div>
+</div>
         <ul id= "No of Expenses"></ul>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js"></script>
         <script>
@@ -56,7 +70,7 @@
                     Cetegory
 
                 }
-            axios.post("https://crudcrud.com/api/bf06fc2c7e3b402089baafec521e4a0e/ExpensesData",obj)
+            axios.post("https://crudcrud.com/api/2907acdb9d0c42e5be77bdbf1dbed59a/ExpensesData",obj)
             .then( (response) =>{
                 DisplayOnScreen(response.data)
                 console.log(response)
@@ -67,7 +81,7 @@
             }
             window.addEventListener("DOMContentLoaded", () => {
 
-                axios.get("https://crudcrud.com/api/bf06fc2c7e3b402089baafec521e4a0e/ExpensesData")
+                axios.get("https://crudcrud.com/api/2907acdb9d0c42e5be77bdbf1dbed59a/ExpensesData")
                 .then((response) =>{
                     console.log(response)
                     for(let i=0;i<response.data.length;i++){
@@ -80,7 +94,7 @@
             
             function DisplayOnScreen(User){
                 const parentNode = document.getElementById("No of Expenses")
-                const childNode = `<li id=${User._id}> .${User.Number}- ${User.Description}-,${User.Cetegory}
+                const childNode = `<li id=${User._id}> Rs ${User.Number} - On ${User.Description} - For ${User.Cetegory}
                     <button onclick=deleteExpenses('${User._id}')>Delete Expenses</button>
                     <button onclick=editExepnses('${User.Number}','${User.Description}','${User.Cetegory}','${User._id}')>Edit</button></li>`
                 parentNode.innerHTML = parentNode.innerHTML + childNode// to add the child node in to ul parent node
@@ -95,7 +109,7 @@
                 
                    }
             function deleteExpenses(UserId){
-                axios.delete(`https://crudcrud.com/api/bf06fc2c7e3b402089baafec521e4a0e/ExpensesData/${UserId}`)
+                axios.delete(`https://crudcrud.com/api/2907acdb9d0c42e5be77bdbf1dbed59a/ExpensesData/${UserId}`)
                 removeExpenseFromScreen(UserId)
 
             }
